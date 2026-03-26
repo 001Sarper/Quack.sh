@@ -1,0 +1,14 @@
+{
+  "client_preferences": {
+    "theme": "dark",
+    "font_size": ""
+  },
+  "connections": {
+    "example_connection": {
+      "host": "x.x.x.x",
+      "port": "22",
+      "username": "root",
+      "password": "iLoveAdmins"
+    }
+  }
+}

@@ -1,0 +1,50 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" CanResize="False"
+        x:Class="Quack.sh.terminal"
+        Title="Quack.sh">
+        <Grid>
+                
+                
+                <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition Width="*"/>  <!--Horizontal-->
+                </Grid.ColumnDefinitions>
+                
+                <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="*"/>    <!--Vertikal-->
+                </Grid.RowDefinitions>
+                
+                <Grid Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="0">
+                        <Menu>
+                                <MenuItem Header="File">
+                                        <MenuItem Header="New Connection" Click="newConnection_OnClick"/>
+                                        <MenuItem Header="Saved Hosts"/>
+                                        <Separator/>
+                                        <MenuItem Header="Exit"/>
+                                </MenuItem>
+                                
+                                <MenuItem Header="View">
+                                        <MenuItem Header="Preferences" Click="preferences_OnClick"/>
+                                </MenuItem>
+                                
+                                <MenuItem Header="Help">
+                                        <MenuItem Header="About Quack.sh"/>
+                                        <MenuItem Header="GitHub" Click="openGithub_OnClick"/>
+                                </MenuItem>
+                        </Menu>
+                </Grid>
+                
+                <Grid Grid.Row="1" Grid.Column="0"> 
+                        <TextBox Text="Hi"></TextBox>
+                </Grid>
+                
+                <Grid Grid.Row="1" Grid.Column="1">
+                        <TextBox Text="Hey"></TextBox>
+                </Grid>
+                
+        </Grid>
+</Window>
