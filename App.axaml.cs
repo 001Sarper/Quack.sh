@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Avalonia.Styling;
 
 namespace Quack.sh;
 
@@ -15,9 +16,10 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            desktop.MainWindow = new terminal();
+            desktop.MainWindow = new MainWindow();
         }
-
         base.OnFrameworkInitializationCompleted();
+        
+        RequestedThemeVariant = ThemeVariant.Light;
     }
 }

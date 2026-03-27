@@ -4,9 +4,9 @@ using Avalonia.Markup.Xaml;
 
 namespace Quack.sh;
 
-public partial class preferences : Window
+public partial class NewConnectionWindow : Window
 {
-    public preferences()
+    public NewConnectionWindow()
     {
         InitializeComponent();
     }

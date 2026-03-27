@@ -17,20 +17,26 @@
       <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
       <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="Svg.Controls.Skia.Avalonia" Version="11.3.9.5" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Views\terminal.axaml.cs">
+    <Compile Update="Views\MainWindow.axaml.cs">
       <DependentUpon>terminal.axaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\preferences.axaml.cs">
+    <Compile Update="Views\PreferencesWindow.axaml.cs">
       <DependentUpon>preferences.axaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\new_connection.axaml.cs">
+    <Compile Update="Views\NewConnectionWindow.axaml.cs">
       <DependentUpon>new_connection.axaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Assets\Images\logo_long-192x128.svg" />
+    <AvaloniaResource Include="Assets\Images\logo_long-192x128.svg" />
   </ItemGroup>
 </Project>

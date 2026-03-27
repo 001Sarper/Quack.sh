@@ -3,11 +3,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" CanResize="False"
-        x:Class="Quack.sh.terminal"
+        x:Class="Quack.sh.MainWindow"
         Title="Quack.sh">
         <Grid>
-                
-                
+
                 <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="200"/>
                         <ColumnDefinition Width="*"/>  <!--Horizontal-->
@@ -21,19 +20,19 @@
                 <Grid Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="0">
                         <Menu>
                                 <MenuItem Header="File">
-                                        <MenuItem Header="New Connection" Click="newConnection_OnClick"/>
+                                        <MenuItem Header="New Connection" Click="ShowNewConnectionWindow_OnClick"/>
                                         <MenuItem Header="Saved Hosts"/>
                                         <Separator/>
                                         <MenuItem Header="Exit"/>
                                 </MenuItem>
-                                
+                                 
                                 <MenuItem Header="View">
-                                        <MenuItem Header="Preferences" Click="preferences_OnClick"/>
+                                        <MenuItem Header="Preferences" Click="ShowPreferencesWindow_OnClick"/>
                                 </MenuItem>
                                 
                                 <MenuItem Header="Help">
-                                        <MenuItem Header="About Quack.sh"/>
-                                        <MenuItem Header="GitHub" Click="openGithub_OnClick"/>
+                                        <MenuItem Header="About Quack.sh" Click="ShowAboutWindow_OnClick"/>
+                                        <MenuItem Header="GitHub" Click="OpenGithub_OnClick"/>
                                 </MenuItem>
                         </Menu>
                 </Grid>

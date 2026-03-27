@@ -3,8 +3,13 @@
   <component name="AvaloniaProject">
     <option name="projectPerEditor">
       <map>
+        <entry key="App.axaml" value="Quack.sh.csproj" />
         <entry key="MainWindow.axaml" value="Quack.sh.csproj" />
         <entry key="Preferences.axaml" value="Quack.sh.csproj" />
+        <entry key="Views/AboutWindow.axaml" value="Quack.sh.csproj" />
+        <entry key="Views/PreferencesWindow.axaml" value="Quack.sh.csproj" />
+        <entry key="Views/preferences.axaml" value="Quack.sh.csproj" />
+        <entry key="Views/terminal.axaml" value="Quack.sh.csproj" />
         <entry key="new_connection.axaml" value="Quack.sh.csproj" />
         <entry key="preferences.axaml" value="Quack.sh.csproj" />
         <entry key="terminal.axaml" value="Quack.sh.csproj" />

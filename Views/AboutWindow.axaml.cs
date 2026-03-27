@@ -2,11 +2,11 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
-namespace Quack.sh;
+namespace Quack.sh.Views;
 
-public partial class new_connection : Window
+public partial class AboutWindow : Window
 {
-    public new_connection()
+    public AboutWindow()
     {
         InitializeComponent();
     }

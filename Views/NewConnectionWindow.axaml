@@ -3,7 +3,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="350" CanResize="False" MaxHeight="350" MaxWidth="400"
-        x:Class="Quack.sh.new_connection"
+        x:Class="Quack.sh.NewConnectionWindow"
         Title="Add a new Connection">
         <StackPanel Spacing="10" Margin="16">
                 <TextBlock Text="Host"/>
