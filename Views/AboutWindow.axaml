@@ -5,16 +5,18 @@
         mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="350" Width="400" Height="350"
         x:Class="Quack.sh.Views.AboutWindow"
         Title="About Quack.sh">
-        <Grid>
-                <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
+        <Border Background="{DynamicResource BackgroundColor}">
+                <Grid>
+                        <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
                 
                 
             
-                <Image Grid.Row="0" Source="{SvgImage /Assets/Images/logo_long-192x128.svg}" Height="128" Width="192"></Image>
-                <TextBlock Grid.Row="1"
-                           Text="Quack.sh is an Open-Source SSH-Client made as a hobby project by a student. This idea has spread because I love to tinker with Servers and love homelabbing, and coding of course! If you like this project feel free to leave a star on its repo ♥" Margin="30" TextWrapping="Wrap"></TextBlock>
-        </Grid>
+                        <Image Grid.Row="0" Source="{SvgImage /Assets/Images/logo_long-192x128.svg}" Height="128" Width="192"></Image>
+                        <TextBlock TextAlignment="Justify" Grid.Row="1"
+                                   Text="Quack.sh is an Open-Source SSH-Client made as a hobby project by a student. This idea has spread because I love to tinker with Servers and love homelabbing, and coding of course! If you like this project feel free to leave a star on its repo ♥" Margin="30" TextWrapping="Wrap"></TextBlock>
+                </Grid>
+        </Border>
 </Window>

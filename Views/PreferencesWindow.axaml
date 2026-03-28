@@ -5,16 +5,18 @@
         mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="300" MaxWidth="400" MaxHeight="300"
         x:Class="Quack.sh.PreferencesWindow"
         Title="Preferences">
-        <StackPanel Spacing="10" Margin="16">
-                <TextBlock Text="Theme"/>
-                <ComboBox SelectedIndex="0">
-                        <ComboBoxItem Content="Dark"/>
-                        <ComboBoxItem Content="Light"/>
-                </ComboBox>
-                <TextBlock Text="Font Size"/>
-                <NumericUpDown Minimum="8" Maximum="32" Value="12" Increment="1"/>
+        <Border Background="{DynamicResource BackgroundColor}">
+                <StackPanel Spacing="10" Margin="16">
+                        <TextBlock Text="Theme"/>
+                        <ComboBox SelectedIndex="0" Name="ThemeSelection">
+                                <ComboBoxItem Content="Dark"/>
+                                <ComboBoxItem Content="Light"/>
+                        </ComboBox>
+                        <TextBlock Text="Font Size"/>
+                        <NumericUpDown Minimum="8" Maximum="32" Value="12" Increment="1" Name="FontSize"/>
                 
-                <Button Content="Save" Background="#00ADB5" Click="Save_OnClick"/>
-        </StackPanel>        
+                        <Button Content="Save" Background="#00ADB5" Click="Save_OnClick"/>
+                </StackPanel>
+        </Border>        
         
 </Window>

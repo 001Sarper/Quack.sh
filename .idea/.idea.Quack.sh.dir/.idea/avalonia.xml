@@ -7,6 +7,8 @@
         <entry key="MainWindow.axaml" value="Quack.sh.csproj" />
         <entry key="Preferences.axaml" value="Quack.sh.csproj" />
         <entry key="Views/AboutWindow.axaml" value="Quack.sh.csproj" />
+        <entry key="Views/MainWindow.axaml" value="Quack.sh.csproj" />
+        <entry key="Views/NewConnectionWindow.axaml" value="Quack.sh.csproj" />
         <entry key="Views/PreferencesWindow.axaml" value="Quack.sh.csproj" />
         <entry key="Views/preferences.axaml" value="Quack.sh.csproj" />
         <entry key="Views/terminal.axaml" value="Quack.sh.csproj" />

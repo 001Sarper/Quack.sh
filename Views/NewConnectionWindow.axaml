@@ -5,16 +5,18 @@
         mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="350" CanResize="False" MaxHeight="350" MaxWidth="400"
         x:Class="Quack.sh.NewConnectionWindow"
         Title="Add a new Connection">
-        <StackPanel Spacing="10" Margin="16">
-                <TextBlock Text="Host"/>
-                <TextBox Watermark="192.168.178.43"/>
-                <TextBlock Text="Port"/>
-                <TextBox Watermark="22"/>
-                <TextBlock Text="Username"/>
-                <TextBox Watermark="root"/>
-                <TextBlock Text="Password"/>
-                <TextBox Watermark="iLoveAdmins" PasswordChar="•" />
+        <Border Background="{DynamicResource BackgroundColor}">
+                <StackPanel Spacing="10" Margin="16">
+                        <TextBlock Text="Host"/>
+                        <TextBox Watermark="192.168.178.43"/>
+                        <TextBlock Text="Port"/>
+                        <TextBox Watermark="22"/>
+                        <TextBlock Text="Username"/>
+                        <TextBox Watermark="root"/>
+                        <TextBlock Text="Password"/>
+                        <TextBox Watermark="iLoveAdmins" PasswordChar="•" />
                 
-                <Button Content="Connect" Background="MediumTurquoise"/>
-        </StackPanel>
+                        <Button Content="Connect" Background="MediumTurquoise"/>
+                </StackPanel>
+        </Border>
 </Window>
