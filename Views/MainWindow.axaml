@@ -44,7 +44,7 @@
                         </Grid>
                 
                         <Grid Grid.Row="1" Grid.Column="1">
-                                <webview:WebView Address="https://google.com"/>
+                                <webview:WebView Name="TerminalWebView"/>
                         </Grid>
                 
                 </Grid>

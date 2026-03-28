@@ -42,5 +42,8 @@
   <ItemGroup>
     <None Remove="Assets\Images\logo_long-192x128.svg" />
     <AvaloniaResource Include="Assets\Images\logo_long-192x128.svg" />
+    <None Update="Assets\xTerm.js\terminal.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>
