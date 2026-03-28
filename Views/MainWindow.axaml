@@ -2,6 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:webview="clr-namespace:WebViewControl;assembly=WebViewControl.Avalonia"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" CanResize="False"
         x:Class="Quack.sh.MainWindow"
         Title="Quack.sh">
@@ -43,7 +44,7 @@
                         </Grid>
                 
                         <Grid Grid.Row="1" Grid.Column="1">
-                                <TextBox Text="Hey"></TextBox>
+                                <webview:WebView Address="https://google.com"/>
                         </Grid>
                 
                 </Grid>
