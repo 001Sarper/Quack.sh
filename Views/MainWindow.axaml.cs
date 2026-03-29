@@ -16,24 +16,21 @@ public partial class MainWindow : Window
     public static string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
     public static string configDir = Path.Combine(appData, "Quack.sh");
     public static string configPath = Path.Combine(configDir, "Connections.json");
-    
+    public static string configPathPreferences = Path.Combine(configDir, "ClientPreferences.json");
     
     
     public MainWindow()
     {
         InitializeComponent();
         
-        
-        var htmlPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "xTerm.js", "terminal.html");
-        TerminalWebView.Address = $"file://{htmlPath}";
-        
         _bridge = new TerminalBridge();
         _bridge.OnInput = (input) => _sshService.SendInput(input);
         _bridge.OnResize = (cols, rows) => _sshService.Resize(cols, rows);
         TerminalWebView.RegisterJavascriptObject("terminalBridge", _bridge);
+        
 
         
-        if (File.Exists(configPath))
+        if (File.Exists(configPath) && File.Exists(configPathPreferences))
         {
             string json = File.ReadAllText(configPath);
             Config config = JsonSerializer.Deserialize<Config>(json);
@@ -100,6 +97,9 @@ public partial class MainWindow : Window
     private SshService _sshService = new SshService();
     public async void ConnectToServer_OnClick(object? sender, RoutedEventArgs e)
     {
+        string jsonPreferences = File.ReadAllText(configPathPreferences);
+        Config configPreferences = JsonSerializer.Deserialize<Config>(jsonPreferences);
+        
         var button = sender as Button;
         _currentConnection = button.Tag as Connections;
     
@@ -107,6 +107,7 @@ public partial class MainWindow : Window
         TerminalWebView.Address = $"file://{htmlPath}";
     
         await System.Threading.Tasks.Task.Delay(1000);
+        TerminalWebView.ExecuteScript($"term.options.fontSize = {configPreferences.ClientPreferences[0].FontSize};");
     
         if (_currentConnection != null)
             ConnectSSH(_currentConnection);

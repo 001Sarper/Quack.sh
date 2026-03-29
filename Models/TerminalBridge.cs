@@ -13,6 +13,7 @@ public class TerminalBridge
     
     public void sendInput(string data)
     {
+        Console.WriteLine($"Input: {BitConverter.ToString(System.Text.Encoding.UTF8.GetBytes(data))}");
         OnInput?.Invoke(data);
     }
     

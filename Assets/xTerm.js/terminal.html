@@ -4,6 +4,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm/css/xterm.css" />
     <script src="https://cdn.jsdelivr.net/npm/xterm/lib/xterm.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit/lib/xterm-addon-fit.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body { height: 100%; background: #1e1e2e; }
@@ -15,9 +16,24 @@
 <script>
     var term = new Terminal({
         convertEol: true,
+        fontSize: 14,
+        fontFamily: 'JetBrains Mono, Cascadia Code, monospace',
+        cursorBlink: true,
+        cursorStyle: 'block', // 'block', 'underline', 'bar'
+        scrollback: 1000,
         theme: {
             background: '#1e1e2e',
-            foreground: '#cdd6f4'
+            foreground: '#cdd6f4',
+            cursor: '#f5e0dc',
+            selection: '#45475a',
+            black: '#45475a',
+            red: '#f38ba8',
+            green: '#a6e3a1',
+            yellow: '#f9e2af',
+            blue: '#89b4fa',
+            magenta: '#f5c2e7',
+            cyan: '#94e2d5',
+            white: '#bac2de',
         }
     });
     var fitAddon = new FitAddon.FitAddon();
@@ -36,12 +52,32 @@
         terminalBridge.setSize(term.cols, term.rows);
     });
 
+    document.addEventListener('wheel', function(event) {
+        if (event.ctrlKey) {
+            event.preventDefault();
+            event.stopPropagation();
+            if (event.deltaY < 0) {
+                term.options.fontSize = term.options.fontSize + 1;
+            } else {
+                term.options.fontSize = term.options.fontSize - 1;
+            }
+            fitAddon.fit();
+        }
+    }, { passive: false, capture: true });
+
     term.onData(function(data) {
         try {
             terminalBridge.sendInput(data);
         } catch(e) {
             term.write('\r\nJS Error: ' + e.message + '\r\n');
         }
+    });
+
+    term.attachCustomKeyEventHandler(function(event) {
+        if (event.ctrlKey && (event.type === 'keydown') && event.key === 'Control') {
+            return false;
+        }
+        return true;
     });
 
     function getSize() {
