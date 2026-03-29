@@ -2,21 +2,23 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="350" CanResize="False" MaxHeight="350" MaxWidth="400"
+        mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="400" CanResize="False" MaxHeight="400" MaxWidth="450"
         x:Class="Quack.sh.NewConnectionWindow"
         Title="Add a new Connection">
         <Border Background="{DynamicResource BackgroundColor}">
                 <StackPanel Spacing="10" Margin="16">
+                        <TextBlock Text="Host Name"/>
+                        <TextBox Watermark="Debian Server" x:Name="NameTextBox"/>
                         <TextBlock Text="Host"/>
-                        <TextBox Watermark="192.168.178.43"/>
+                        <TextBox Watermark="192.168.178.43" x:Name="HostTextBox"/>
                         <TextBlock Text="Port"/>
-                        <TextBox Watermark="22"/>
+                        <TextBox Watermark="22" x:Name="PortTextBox"/>
                         <TextBlock Text="Username"/>
-                        <TextBox Watermark="root"/>
+                        <TextBox Watermark="root" x:Name="UserTextBox"/>
                         <TextBlock Text="Password"/>
-                        <TextBox Watermark="iLoveAdmins" PasswordChar="•" />
+                        <TextBox Watermark="iLoveAdmins" PasswordChar="•" x:Name="PasswordTextBox"/>
                 
-                        <Button Content="Connect" Background="MediumTurquoise"/>
+                        <Button Content="Connect" Background="MediumTurquoise" Click="AddConnection_OnClick"/>
                 </StackPanel>
         </Border>
 </Window>

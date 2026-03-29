@@ -40,7 +40,9 @@
                         </Grid>
                 
                         <Grid Grid.Row="1" Grid.Column="0"> 
-                                <TextBox Text="Hi"></TextBox>
+                                <StackPanel x:Name="ConnectionsList" Spacing="5">
+                                        <TextBlock Text="Connections List:"/>
+                                </StackPanel>
                         </Grid>
                 
                         <Grid Grid.Row="1" Grid.Column="1">
