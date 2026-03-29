@@ -46,5 +46,10 @@
     <None Update="Assets\xTerm.js\terminal.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Remove="Assets\Images\Icon.png" />
+    <None Remove="Assets\Images\Logo.png" />
+    <None Remove="Assets\Images\Logo.ico" />
+    <None Remove="Assets\Images\Logo.512x512(1).ico" />
+    <AvaloniaResource Include="Assets\Images\Logo.ico" />
   </ItemGroup>
 </Project>
