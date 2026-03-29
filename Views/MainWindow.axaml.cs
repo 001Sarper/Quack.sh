@@ -32,7 +32,7 @@ public partial class MainWindow : Window
             
             foreach (var connection in config.Connections)
             {
-                AddConnection(connection.Name);
+                AddConnection(connection);
             }
         }
         else
@@ -74,14 +74,33 @@ public partial class MainWindow : Window
         
     }
 
-    public void AddConnection(string connectionName)
+    public void AddConnection(Connections connection)
     {
         var button = new Button
         {
-            Content = connectionName,
+            Content = connection.Name,
             Width = 200,
+            Tag = connection
         };
         
+        button.Click += ConnectToServer_OnClick;
+        
+        
         ConnectionsList.Children.Add(button);
+    }
+
+    public void ConnectToServer_OnClick(object? sender, RoutedEventArgs e)
+    {
+        var button = sender as Button;
+        var connection = button.Tag as Connections;
+
+        var ssh = new SshService();
+        var output = ssh.RunCommand(connection.Host, connection.Port, connection.Username, connection.Password, "ls -la");
+        var safeOutput = output.Replace("`", "\\`");
+        TerminalWebView.ExecuteScript($"term.write(`{safeOutput}`)");
+        
+        
+
+        
     }
 }

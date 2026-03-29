@@ -57,8 +57,6 @@ public partial class NewConnectionWindow : Window
             var box = MessageBoxManager.GetMessageBoxStandard("Connection added successfully",
                 "Connection added.", ButtonEnum.Ok);
             await box.ShowAsync();
-            MainWindow mainWindow = new MainWindow();
-            mainWindow.AddConnection(NameTextBox.Text);
         } else
         {
             var box = MessageBoxManager.GetMessageBoxStandard("Invalid parameters",
