@@ -18,7 +18,7 @@
                         <TextBlock Text="Password"/>
                         <TextBox Watermark="iLoveAdmins" PasswordChar="•" x:Name="PasswordTextBox"/>
                 
-                        <Button Content="Connect" Background="MediumTurquoise" Click="AddConnection_OnClick"/>
+                        <Button Content="Add" Background="MediumTurquoise" Click="AddConnection_OnClick"/>
                 </StackPanel>
         </Border>
 </Window>

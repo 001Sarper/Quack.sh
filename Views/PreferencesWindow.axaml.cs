@@ -28,6 +28,7 @@ public partial class PreferencesWindow : Window
 
         ThemeSelection.IsEditable = true;
         ThemeSelection.Text = savedTheme;
+        ThemeSelection.IsEditable = false;
         FontSize.Value = savedFontSize;
     }
 

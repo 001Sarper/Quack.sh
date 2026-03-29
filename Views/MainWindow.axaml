@@ -23,7 +23,7 @@
                                 <Menu>
                                         <MenuItem Header="File">
                                                 <MenuItem Header="New Connection" Click="ShowNewConnectionWindow_OnClick"/>
-                                                <MenuItem Header="Saved Hosts"/>
+                                                <MenuItem Header="Saved Hosts" Click="SavedHostsWindow_OnClick"/>
                                                 <Separator/>
                                                 <MenuItem Header="Exit"/>
                                         </MenuItem>
