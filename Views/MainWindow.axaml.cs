@@ -4,8 +4,10 @@ using System.IO;
 using System.Text.Json;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Threading;
 using Quack.sh.Views;
 using Quack.sh.Models;
+using WebViewControl;
 
 namespace Quack.sh;
 
@@ -20,9 +22,15 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        
+        
         var htmlPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "xTerm.js", "terminal.html");
         TerminalWebView.Address = $"file://{htmlPath}";
-
+        
+        _bridge = new TerminalBridge();
+        _bridge.OnInput = (input) => _sshService.SendInput(input);
+        _bridge.OnResize = (cols, rows) => _sshService.Resize(cols, rows);
+        TerminalWebView.RegisterJavascriptObject("terminalBridge", _bridge);
 
         
         if (File.Exists(configPath))
@@ -89,18 +97,49 @@ public partial class MainWindow : Window
         ConnectionsList.Children.Add(button);
     }
 
-    public void ConnectToServer_OnClick(object? sender, RoutedEventArgs e)
+    private SshService _sshService = new SshService();
+    public async void ConnectToServer_OnClick(object? sender, RoutedEventArgs e)
     {
         var button = sender as Button;
-        var connection = button.Tag as Connections;
+        _currentConnection = button.Tag as Connections;
+    
+        var htmlPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "xTerm.js", "terminal.html");
+        TerminalWebView.Address = $"file://{htmlPath}";
+    
+        await System.Threading.Tasks.Task.Delay(1000);
+    
+        if (_currentConnection != null)
+            ConnectSSH(_currentConnection);
+    }
+    
+    private Connections? _currentConnection;
 
-        var ssh = new SshService();
-        var output = ssh.RunCommand(connection.Host, connection.Port, connection.Username, connection.Password, "ls -la");
-        var safeOutput = output.Replace("`", "\\`");
-        TerminalWebView.ExecuteScript($"term.write(`{safeOutput}`)");
-        
-        
+    private void OnWebViewReady(object? sender, RoutedEventArgs e)
+    {
+        TerminalWebView.Loaded -= OnWebViewReady;
 
-        
+        System.Threading.Tasks.Task.Delay(600).ContinueWith(_ =>
+        {
+            Dispatcher.UIThread.Post(() =>
+            {
+                if (_currentConnection != null)
+                    ConnectSSH(_currentConnection);
+            });
+        });
+    }
+    
+    private TerminalBridge _bridge = new TerminalBridge();
+    private void ConnectSSH(Connections connection)
+    {
+        Console.WriteLine($"ConnectSSH called: {connection.Host}");
+    
+        _sshService.Connect(connection.Host, connection.Port, connection.Username, connection.Password, (output) =>
+        {
+            Dispatcher.UIThread.Post(() =>
+            {
+                var safe = output.Replace("`", "\\`").Replace("\\", "\\\\");
+                TerminalWebView.ExecuteScript($"term.write(`{safe}`)");
+            });
+        }, _bridge.Cols, _bridge.Rows);
     }
 }

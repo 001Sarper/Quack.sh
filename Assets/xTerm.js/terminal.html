@@ -3,22 +3,51 @@
 <head>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm/css/xterm.css" />
     <script src="https://cdn.jsdelivr.net/npm/xterm/lib/xterm.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit/lib/xterm-addon-fit.js"></script>
     <style>
-        body { margin: 0; background: #1e1e2e; }
-        #terminal { height: 100vh; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; background: #1e1e2e; }
+        #terminal { height: 100%; }
     </style>
 </head>
 <body>
 <div id="terminal"></div>
 <script>
     var term = new Terminal({
+        convertEol: true,
         theme: {
             background: '#1e1e2e',
             foreground: '#cdd6f4'
         }
     });
+    var fitAddon = new FitAddon.FitAddon();
+    term.loadAddon(fitAddon);
     term.open(document.getElementById('terminal'));
-    term.write('Quack.sh - Connecting...\r\n');
+    term.focus();
+
+    setTimeout(function() {
+        fitAddon.fit();
+        terminalBridge.setSize(term.cols, term.rows);
+        terminalBridge.connect();
+    }, 500);
+
+    window.addEventListener('resize', function() {
+        fitAddon.fit();
+        terminalBridge.setSize(term.cols, term.rows);
+    });
+
+    term.onData(function(data) {
+        try {
+            terminalBridge.sendInput(data);
+        } catch(e) {
+            term.write('\r\nJS Error: ' + e.message + '\r\n');
+        }
+    });
+
+    function getSize() {
+        fitAddon.fit();
+        return term.cols + "," + term.rows;
+    }
 </script>
 </body>
 </html>
