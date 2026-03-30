@@ -34,10 +34,6 @@
       <DependentUpon>preferences.axaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\NewConnectionWindow.axaml.cs">
-      <DependentUpon>new_connection.axaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -51,5 +47,21 @@
     <None Remove="Assets\Images\Logo.ico" />
     <None Remove="Assets\Images\Logo.512x512(1).ico" />
     <AvaloniaResource Include="Assets\Images\Logo.ico" />
+    <None Remove="Assets\Images\deleteIcon.png" />
+    <AvaloniaResource Include="Assets\Images\deleteIcon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AvaloniaResource>
+    <None Remove="Assets\Images\editIcon.png" />
+    <AvaloniaResource Include="Assets\Images\editIcon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AvaloniaResource>
+    <None Remove="Assets\Images\saveIcon.png" />
+    <AvaloniaResource Include="Assets\Images\saveIcon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AvaloniaResource>
+    <None Remove="Assets\Images\addIcon.png" />
+    <AvaloniaResource Include="Assets\Images\addIcon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AvaloniaResource>
   </ItemGroup>
 </Project>

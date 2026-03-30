@@ -56,7 +56,7 @@ public partial class PreferencesWindow : Window
         File.WriteAllText(configPath, JsonSerializer.Serialize(config));
 
         App.Instance.SetTheme(ThemeSelection.Text);
-        if (MainWindow.Instance.TerminalList.Any() && MainWindow.Instance.ButtonList.Any())
+        if (MainWindow.Instance.TerminalList.Any() || MainWindow.Instance.ButtonList.Any())
         {
             bool isDark = ThemeSelection.Text ==  "Dark";
             

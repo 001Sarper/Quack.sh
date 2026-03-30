@@ -31,11 +31,6 @@ public partial class MainWindow : Window
         Instance = this;
         InitializeComponent();
         
-        
-        
-        
-
-        
         if (File.Exists(configPath) && File.Exists(configPathPreferences))
         {
             string json = File.ReadAllText(configPath);
@@ -53,21 +48,6 @@ public partial class MainWindow : Window
         
         
     }
-
-   /* public async void SetBackground()
-    {
-        var htmlPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "xTerm.js", "blankPage.html");
-
-        TerminalWebView.Loaded += async (s, e) =>
-        {
-            await Task.Delay(50);
-            Console.WriteLine("Loaded fired!");
-            bool isDark = configPreferences.ClientPreferences[0].Theme == "Dark";
-            string bgColor = isDark ? "#0D1117" : "#FFFFFF";
-            TerminalWebView.ExecuteScript($"document.body.style.background = '{bgColor}'");
-        };
-        TerminalWebView.Address = $"file://{htmlPath}";
-    }*/
     
     private void ShowPreferencesWindow_OnClick(object? sender, RoutedEventArgs e)
     {
@@ -75,12 +55,7 @@ public partial class MainWindow : Window
         preferences.Show();
         
     }
-
-    private void ShowNewConnectionWindow_OnClick(object? sender, RoutedEventArgs e)
-    {
-        var newConnection = new NewConnectionWindow();
-        newConnection.Show();
-    }
+    
 
     private void OpenGithub_OnClick(object? sender, RoutedEventArgs e)
     {
@@ -201,10 +176,16 @@ public partial class MainWindow : Window
             });
         }, connectionTab.Bridge.Cols, connectionTab.Bridge.Rows);
     }
+    
 
-    private void SavedHostsWindow_OnClick(object? sender, RoutedEventArgs e)
+    private void ManageHostsWindow_OnClick(object? sender, RoutedEventArgs e)
     {
-        SavedHostsWindow savedHostsWindow = new SavedHostsWindow();
-        savedHostsWindow.Show();
+        ManageHostsWindow manageHostsWindow = new ManageHostsWindow();
+        manageHostsWindow.Show();
+    }
+
+    private void Exit_OnClick(object? sender, RoutedEventArgs e)
+    {
+        Environment.Exit(0);
     }
 }
