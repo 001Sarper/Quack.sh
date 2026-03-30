@@ -26,10 +26,12 @@ public partial class SavedHostsWindow : Window
         {
             string json = File.ReadAllText(configPath);
             Config config = JsonSerializer.Deserialize<Config>(json);
+            int index = 0;
             
             foreach (var connection in config.Connections)
             {
-                AddConnection(connection);
+                AddConnection(connection, index);
+                index++;
             }
         }
         else
@@ -39,7 +41,7 @@ public partial class SavedHostsWindow : Window
         
     }
 
-    public void AddConnection(Connections connection)
+    public void AddConnection(Connections connection, int index)
     {
         
         var grid = new Grid();
@@ -51,12 +53,12 @@ public partial class SavedHostsWindow : Window
         var deleteButton = new Button
         {
             Content = "Delete",
-            Tag = connection
+            Tag = (connection, index)
         };
         var editButton = new Button
         {
             Content = "Edit",
-            Tag = connection
+            Tag = (connection, index)
         };
         
         
@@ -83,7 +85,7 @@ public partial class SavedHostsWindow : Window
         {
             Console.WriteLine("Delete Connection called");
             var button = sender as Button;
-            var connection = button.Tag as Connections;
+            var (connection, index) = ((Connections, int))button.Tag;
         
             string json = File.ReadAllText(configPath);
             Config config = JsonSerializer.Deserialize<Config>(json);
@@ -93,6 +95,11 @@ public partial class SavedHostsWindow : Window
         
             string newJson = JsonSerializer.Serialize(config);
             File.WriteAllText(configPath, newJson);
+            
+            
+            ParentPanel.Children.RemoveAt(index);
+            MainWindow.Instance.ConnectionsList.Children.RemoveAt(index + 1);
+
         } 
         
     }

@@ -41,22 +41,24 @@ public partial class NewConnectionWindow : Window
         if (NameTextBox.Text != "" && HostTextBox.Text.Contains(".") && int.TryParse(PortTextBox.Text, out int port) &&
             UserTextBox.Text != "" && PasswordTextBox.Text != "")
         {
-            
 
-            config.Connections.Add(new Connections
+            Connections newConnection = new Connections
             {
                 Name = NameTextBox.Text,
                 Host = HostTextBox.Text,
                 Port = port,
                 Username = UserTextBox.Text,
                 Password = PasswordTextBox.Text
-            });
+            };
+            config.Connections.Add(newConnection);
             
             string json =  JsonSerializer.Serialize(config);
             File.WriteAllText(configPath, json);
             var box = MessageBoxManager.GetMessageBoxStandard("Connection added successfully",
                 "Connection added.", ButtonEnum.Ok);
             await box.ShowAsync();
+            MainWindow.Instance.AddConnection(newConnection);
+            Close();
         } else
         {
             var box = MessageBoxManager.GetMessageBoxStandard("Invalid parameters",

@@ -1,12 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media;
 using Quack.sh.Models;
+using WebViewControl;
 
 namespace Quack.sh;
 
@@ -51,5 +54,24 @@ public partial class PreferencesWindow : Window
         config.ClientPreferences[0].FontSize = (int)FontSize.Value;
 
         File.WriteAllText(configPath, JsonSerializer.Serialize(config));
+
+        App.Instance.SetTheme(ThemeSelection.Text);
+        if (MainWindow.Instance.TerminalList.Any() && MainWindow.Instance.ButtonList.Any())
+        {
+            bool isDark = ThemeSelection.Text ==  "Dark";
+            
+            foreach (WebView webView in MainWindow.Instance.TerminalList)
+            {
+                webView.ExecuteScript($"term.options.fontSize = {(int)FontSize.Value};");
+                webView.ExecuteScript($"setTheme({isDark.ToString().ToLower()})");
+            }
+            
+            foreach (Button button in MainWindow.Instance.ButtonList)
+            {
+                button.Background =
+                    new SolidColorBrush(isDark ? Color.FromArgb(255, 22, 27, 34) : Color.FromArgb(255, 246, 248, 250),
+                        1.0);
+            }
+        }
     }
 }

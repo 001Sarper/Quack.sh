@@ -12,9 +12,12 @@ namespace Quack.sh;
 
 public partial class App : Application
 {
+    public static App Instance { get; private set; }
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
+        Instance = this;
+
     }
 
     public override void OnFrameworkInitializationCompleted()
@@ -36,12 +39,17 @@ public partial class App : Application
             string json = File.ReadAllText(configPath);
             Config config = JsonSerializer.Deserialize<Config>(json);
             var preference = config.ClientPreferences[0];
-            RequestedThemeVariant = preference.Theme == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
+            SetTheme(preference.Theme);
         }
         else
         {
             RequestedThemeVariant = ThemeVariant.Dark; // Standard falls keine Config da
         }
+    }
+
+    public void SetTheme(string theme)
+    {
+        RequestedThemeVariant = theme == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
     }
     
     

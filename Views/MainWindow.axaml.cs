@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
@@ -21,12 +22,13 @@ public partial class MainWindow : Window
     public static string configDir = Path.Combine(appData, "Quack.sh");
     public static string configPath = Path.Combine(configDir, "Connections.json");
     public static string configPathPreferences = Path.Combine(configDir, "ClientPreferences.json");
-    public static string jsonPreferences = File.ReadAllText(configPathPreferences);
-    public static Config configPreferences = JsonSerializer.Deserialize<Config>(jsonPreferences);
+    
+    public static MainWindow Instance { get; private set; }
     
     
     public MainWindow()
     {
+        Instance = this;
         InitializeComponent();
         
         
@@ -96,8 +98,12 @@ public partial class MainWindow : Window
         
     }
 
+    public List<Button> ButtonList = new List<Button>();
     public void AddConnection(Connections connection)
     {
+        string jsonPreferences = File.ReadAllText(configPathPreferences);
+        Config configPreferences = JsonSerializer.Deserialize<Config>(jsonPreferences);
+        
         bool isDark = configPreferences.ClientPreferences[0].Theme == "Dark";
         var button = new Button
         {
@@ -109,15 +115,20 @@ public partial class MainWindow : Window
         
         button.Click += ConnectToServer_OnClick;
         
-        
+        ButtonList.Add(button);
         ConnectionsList.Children.Add(button);
     }
 
+    public List<WebView> TerminalList = new List<WebView>();
     
     public async void ConnectToServer_OnClick(object? sender, RoutedEventArgs e)
     {
         
         var button = sender as Button;
+        
+        string jsonPreferences = File.ReadAllText(configPathPreferences);
+        Config configPreferences = JsonSerializer.Deserialize<Config>(jsonPreferences);
+        
         SshTab tab = new SshTab
         {
             WebView = new WebView(),
@@ -125,6 +136,7 @@ public partial class MainWindow : Window
             Bridge = new TerminalBridge()
         };
         
+        TerminalList.Add(tab.WebView);
         _currentConnection = button.Tag as Connections;
         
         TabItem tabItem = new TabItem
@@ -154,7 +166,7 @@ public partial class MainWindow : Window
         bool isDark = configPreferences.ClientPreferences[0].Theme == "Dark";
         tab.WebView.ExecuteScript($"setTheme({isDark.ToString().ToLower()})");
         
-    
+        
         if (_currentConnection != null)
             ConnectSSH(_currentConnection, tab);
     }
@@ -178,6 +190,7 @@ public partial class MainWindow : Window
     {
         connectionTab.SshService.Disconnect();
         Console.WriteLine($"ConnectSSH called: {connection.Host}");
+        
     
         connectionTab.SshService.Connect(connection.Host, connection.Port, connection.Username, connection.Password, (output) =>
         {
