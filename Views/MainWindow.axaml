@@ -46,7 +46,9 @@
                         </Grid>
                 
                         <Grid Grid.Row="1" Grid.Column="1">
-                                <webview:WebView Name="TerminalWebView"/>
+                                <TabControl x:Name="TabController">
+                                        
+                                </TabControl>
                         </Grid>
                 
                 </Grid>

@@ -2,7 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="400" CanResize="False" MaxHeight="400" MaxWidth="450"
+        mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="400" CanResize="False" MaxHeight="400" MaxWidth="450" Icon="/Assets/Images/Logo.ico"
         x:Class="Quack.sh.NewConnectionWindow"
         Title="Add a new Connection">
         <Border Background="{DynamicResource BackgroundColor}">

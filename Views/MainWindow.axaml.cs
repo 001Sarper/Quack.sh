@@ -48,11 +48,11 @@ public partial class MainWindow : Window
         {
             File.WriteAllText(configPath, "{}");
         }
-        SetBackground();
+        
         
     }
 
-    public async void SetBackground()
+   /* public async void SetBackground()
     {
         var htmlPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "xTerm.js", "blankPage.html");
 
@@ -65,7 +65,7 @@ public partial class MainWindow : Window
             TerminalWebView.ExecuteScript($"document.body.style.background = '{bgColor}'");
         };
         TerminalWebView.Address = $"file://{htmlPath}";
-    }
+    }*/
     
     private void ShowPreferencesWindow_OnClick(object? sender, RoutedEventArgs e)
     {
@@ -113,62 +113,80 @@ public partial class MainWindow : Window
         ConnectionsList.Children.Add(button);
     }
 
-    private SshService _sshService = new SshService();
+    
     public async void ConnectToServer_OnClick(object? sender, RoutedEventArgs e)
     {
         
         var button = sender as Button;
+        SshTab tab = new SshTab
+        {
+            WebView = new WebView(),
+            SshService = new SshService(),
+            Bridge = new TerminalBridge()
+        };
+        
         _currentConnection = button.Tag as Connections;
-    
+        
+        TabItem tabItem = new TabItem
+        {
+            Header = _currentConnection.Name,
+            FontSize = 12,
+            IsSelected =  true,
+            Tag = tab
+        };
+        
+        tabItem.GotFocus += SelectInput_OnClick;
+        
+        tabItem.Content = tab.WebView;
+        
+        TabController.Items.Add(tabItem);
+        
         var htmlPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "xTerm.js", "terminal.html");
-        TerminalWebView.Address = $"file://{htmlPath}";
-        _bridge = new TerminalBridge();
-        _bridge.OnInput = (input) => _sshService.SendInput(input);
-        _bridge.OnResize = (cols, rows) => _sshService.Resize(cols, rows);
-        TerminalWebView.RegisterJavascriptObject("terminalBridge", _bridge);
+        tab.WebView.Address = $"file://{htmlPath}";
+        tab.Bridge = new TerminalBridge();
+        tab.Bridge.OnInput = (input) => tab.SshService.SendInput(input);
+        tab.Bridge.OnResize = (cols, rows) => tab.SshService.Resize(cols, rows);
+        tab.WebView.RegisterJavascriptObject("terminalBridge", tab.Bridge);
         
         await Task.Delay(1000);
-        TerminalWebView.ExecuteScript($"term.options.fontSize = {configPreferences.ClientPreferences[0].FontSize};");
+        tab.WebView.ExecuteScript($"term.options.fontSize = {configPreferences.ClientPreferences[0].FontSize};");
         
         bool isDark = configPreferences.ClientPreferences[0].Theme == "Dark";
-        TerminalWebView.ExecuteScript($"setTheme({isDark.ToString().ToLower()})");
-        
+        tab.WebView.ExecuteScript($"setTheme({isDark.ToString().ToLower()})");
         
     
         if (_currentConnection != null)
-            ConnectSSH(_currentConnection);
+            ConnectSSH(_currentConnection, tab);
+    }
+
+    private void SelectInput_OnClick(object? sender, RoutedEventArgs e)
+    {
+        var button = sender as TabItem;
+        var currentTab =  button.Tag as SshTab;
+        
+        currentTab.Bridge = new TerminalBridge();
+        currentTab.Bridge.OnInput = (input) => currentTab.SshService.SendInput(input);
+        currentTab.Bridge.OnResize = (cols, rows) => currentTab.SshService.Resize(cols, rows);
+        currentTab.WebView.RegisterJavascriptObject("terminalBridge", currentTab.Bridge);
+        
     }
     
     private Connections? _currentConnection;
 
-    private void OnWebViewReady(object? sender, RoutedEventArgs e)
-    {
-        TerminalWebView.Loaded -= OnWebViewReady;
-
-        System.Threading.Tasks.Task.Delay(600).ContinueWith(_ =>
-        {
-            Dispatcher.UIThread.Post(() =>
-            {
-                if (_currentConnection != null)
-                    ConnectSSH(_currentConnection);
-            });
-        });
-    }
     
-    private TerminalBridge _bridge = new TerminalBridge();
-    private void ConnectSSH(Connections connection)
+    private void ConnectSSH(Connections connection, SshTab connectionTab)
     {
-        _sshService.Disconnect();
+        connectionTab.SshService.Disconnect();
         Console.WriteLine($"ConnectSSH called: {connection.Host}");
     
-        _sshService.Connect(connection.Host, connection.Port, connection.Username, connection.Password, (output) =>
+        connectionTab.SshService.Connect(connection.Host, connection.Port, connection.Username, connection.Password, (output) =>
         {
             Dispatcher.UIThread.Post(() =>
             {
                 var safe = output.Replace("`", "\\`").Replace("\\", "\\\\");
-                TerminalWebView.ExecuteScript($"term.write(`{safe}`)");
+                connectionTab.WebView.ExecuteScript($"term.write(`{safe}`)");
             });
-        }, _bridge.Cols, _bridge.Rows);
+        }, connectionTab.Bridge.Cols, connectionTab.Bridge.Rows);
     }
 
     private void SavedHostsWindow_OnClick(object? sender, RoutedEventArgs e)

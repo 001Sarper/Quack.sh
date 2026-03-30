@@ -47,9 +47,13 @@
         terminalBridge.connect();
     }, 500);
 
+    let resizeTimeout;
     window.addEventListener('resize', function() {
-        fitAddon.fit();
-        terminalBridge.setSize(term.cols, term.rows);
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(function() {
+            fitAddon.fit();
+            terminalBridge.setSize(term.cols, term.rows);
+        }, 200);
     });
 
     document.addEventListener('wheel', function(event) {
