@@ -10,25 +10,19 @@
             
                          <ResourceDictionary x:Key="Dark">
                              <Color x:Key="BackgroundColor">#0D1117</Color>
-                             <Color x:Key="SurfaceColor">#161B22</Color>
-                             <Color x:Key="TextPrimaryColor">#E6EDF3</Color>
-                             <Color x:Key="TextSecondaryColor">#8B949E</Color>
-                             <Color x:Key="AccentColor">#58A6FF</Color>
+                             <Color x:Key="MenuColor">#1f2328</Color>
+                             <Color x:Key="ConnectionBarColor">#171b21</Color>
                          </ResourceDictionary>
             
                          <ResourceDictionary x:Key="Light">
                              <Color x:Key="BackgroundColor">#FFFFFF</Color>
-                             <Color x:Key="SurfaceColor">#F6F8FA</Color>
-                             <Color x:Key="TextPrimaryColor">#1C2128</Color>
-                             <Color x:Key="TextSecondaryColor">#57606A</Color>
-                             <Color x:Key="AccentColor">#0969DA</Color>
+                             <Color x:Key="MenuColor">#dce4ed</Color>
+                             <Color x:Key="ConnectionBarColor">#cbd3db</Color>
                          </ResourceDictionary>
             
                      </ResourceDictionary.ThemeDictionaries>
                  </ResourceDictionary>
              </Application.Resources>
-    
-             
              
     <Application.Styles>
         <FluentTheme />

@@ -11,8 +11,6 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                
-                
             
                         <Image Grid.Row="0" Source="{SvgImage /Assets/Images/logo_long-192x128.svg}" Height="128" Width="192"></Image>
                         <TextBlock TextAlignment="Justify" Grid.Row="1"

@@ -19,7 +19,7 @@
         fontSize: 14,
         fontFamily: 'JetBrains Mono, Cascadia Code, monospace',
         cursorBlink: true,
-        cursorStyle: 'block', // 'block', 'underline', 'bar'
+        cursorStyle: 'block',
         scrollback: 1000,
         theme: {
             background: '#1e1e2e',
@@ -36,13 +36,22 @@
             white: '#bac2de',
         }
     });
+
     var fitAddon = new FitAddon.FitAddon();
     term.loadAddon(fitAddon);
     term.open(document.getElementById('terminal'));
     term.focus();
 
-    setTimeout(function() {
+    let isResizing = false;
+
+    function safeFit() {
+        isResizing = true;
         fitAddon.fit();
+        setTimeout(() => isResizing = false, 0);
+    }
+
+    setTimeout(function() {
+        safeFit();
         terminalBridge.setSize(term.cols, term.rows);
         terminalBridge.connect();
     }, 500);
@@ -51,30 +60,33 @@
     window.addEventListener('resize', function() {
         clearTimeout(resizeTimeout);
         resizeTimeout = setTimeout(function() {
-            fitAddon.fit();
+            safeFit();
             terminalBridge.setSize(term.cols, term.rows);
         }, 200);
     });
 
-    document.addEventListener('wheel', function(event) {
-        if (event.ctrlKey) {
-            event.preventDefault();
-            event.stopPropagation();
-            if (event.deltaY < 0) {
-                term.options.fontSize = term.options.fontSize + 1;
-            } else {
-                term.options.fontSize = term.options.fontSize - 1;
-            }
-            fitAddon.fit();
-        }
-    }, { passive: false, capture: true });
-
     term.onData(function(data) {
+        if (isResizing) return;
         try {
             terminalBridge.sendInput(data);
         } catch(e) {
             term.write('\r\nJS Error: ' + e.message + '\r\n');
         }
+    });
+
+    term.attachCustomWheelEventHandler(function(e) {
+        if (e.ctrlKey) {
+            e.preventDefault();
+            return false;
+        }
+        return true;
+    });
+
+    term.attachCustomKeyEventHandler(function(event) {
+        if (event.ctrlKey && event.type === 'keydown' && event.key === 'Control') {
+            return false;
+        }
+        return true;
     });
 
     function setTheme(isDark) {
@@ -113,15 +125,8 @@
         }
     }
 
-    term.attachCustomKeyEventHandler(function(event) {
-        if (event.ctrlKey && (event.type === 'keydown') && event.key === 'Control') {
-            return false;
-        }
-        return true;
-    });
-
     function getSize() {
-        fitAddon.fit();
+        safeFit();
         return term.cols + "," + term.rows;
     }
 </script>

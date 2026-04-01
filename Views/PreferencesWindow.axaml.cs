@@ -69,7 +69,7 @@ public partial class PreferencesWindow : Window
             foreach (Button button in MainWindow.Instance.ButtonList)
             {
                 button.Background =
-                    new SolidColorBrush(isDark ? Color.FromArgb(255, 22, 27, 34) : Color.FromArgb(255, 246, 248, 250),
+                    new SolidColorBrush(isDark ? Color.FromArgb(255, 22, 27, 34) : Color.FromArgb(255, 203, 211, 219),
                         1.0);
             }
         }

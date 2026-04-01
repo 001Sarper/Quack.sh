@@ -19,7 +19,7 @@
                                 <RowDefinition Height="*"/>    <!--Vertikal-->
                         </Grid.RowDefinitions>
                 
-                        <Grid Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="0" Background="{DynamicResource SurfaceColor}">
+                        <Grid Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="0" Background="{DynamicResource MenuColor}">
                                 <Menu>
                                         <MenuItem Header="File">
                                                 <MenuItem Header="Manage Hosts" Click="ManageHostsWindow_OnClick"/>
@@ -38,7 +38,7 @@
                                 </Menu>
                         </Grid>
                 
-                        <Grid Grid.Row="1" Grid.Column="0" Background="{DynamicResource SurfaceColor}"> 
+                        <Grid Grid.Row="1" Grid.Column="0" Background="{DynamicResource ConnectionBarColor}"> 
                                 <StackPanel x:Name="ConnectionsList" Spacing="5">
                                         <TextBlock Text="Connections" HorizontalAlignment="Center"/>
                                 </StackPanel>

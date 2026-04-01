@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Threading;
 using Quack.sh.Views;
@@ -44,6 +45,7 @@ public partial class MainWindow : Window
         else
         {
             File.WriteAllText(configPath, "{}");
+            File.WriteAllText(configPathPreferences, "{}");
         }
         
         
@@ -111,20 +113,44 @@ public partial class MainWindow : Window
             Bridge = new TerminalBridge()
         };
         
+        
         TerminalList.Add(tab.WebView);
         _currentConnection = button.Tag as Connections;
         
         TabItem tabItem = new TabItem
         {
-            Header = _currentConnection.Name,
             FontSize = 12,
             IsSelected =  true,
             Tag = tab
         };
         
-        tabItem.GotFocus += SelectInput_OnClick;
+        // Header mit Text + Close Button
+        var headerPanel = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 6 };
+        var headerText = new TextBlock { Text = _currentConnection.Name, VerticalAlignment = VerticalAlignment.Center };
+        var closeButton = new Button
+        {
+            Content = "✕",
+            FontSize = 10,
+            Padding = new Thickness(4, 1),
+            VerticalAlignment = VerticalAlignment.Center
+        };
+
+        closeButton.Click += (s, args) =>
+        {
+            TabController.Items.Remove(tabItem);
+            // Cleanup
+            tab.SshService?.Disconnect();
+            tab.WebView?.Dispose();
+        };
+
+        headerPanel.Children.Add(headerText);
+        headerPanel.Children.Add(closeButton);
+        tabItem.Header = headerPanel;
         
+        tabItem.GotFocus += SelectInput_OnClick;
         tabItem.Content = tab.WebView;
+        
+        
         
         TabController.Items.Add(tabItem);
         
@@ -140,11 +166,20 @@ public partial class MainWindow : Window
         
         bool isDark = configPreferences.ClientPreferences[0].Theme == "Dark";
         tab.WebView.ExecuteScript($"setTheme({isDark.ToString().ToLower()})");
-        
+
+        tab.WebView.SizeChanged += WebViewOnSizeChanged;
         
         if (_currentConnection != null)
             ConnectSSH(_currentConnection, tab);
     }
+
+    private void WebViewOnSizeChanged(object? sender, SizeChangedEventArgs e)
+    {
+        var webview = sender as WebView;
+
+        webview.ZoomPercentage = 1.0;
+    }
+
 
     private void SelectInput_OnClick(object? sender, RoutedEventArgs e)
     {
@@ -155,6 +190,7 @@ public partial class MainWindow : Window
         currentTab.Bridge.OnInput = (input) => currentTab.SshService.SendInput(input);
         currentTab.Bridge.OnResize = (cols, rows) => currentTab.SshService.Resize(cols, rows);
         currentTab.WebView.RegisterJavascriptObject("terminalBridge", currentTab.Bridge);
+        currentTab.WebView.Focus();
         
     }
     
