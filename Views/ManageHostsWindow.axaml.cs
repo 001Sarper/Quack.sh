@@ -187,6 +187,7 @@ public partial class ManageHostsWindow : Window
                 var grid = (Grid)ParentPanel.Children[index];
                 var textblock = (TextBlock)grid.Children[0];
                 textblock.Text = NameTextBox.Text;
+                ResetInputFields();
                 BoxPanel.IsVisible = false;
                 await box.ShowAsync();
             } else
@@ -214,13 +215,13 @@ public partial class ManageHostsWindow : Window
                     Password = PasswordTextBox.Text
                 };
                 config.Connections.Add(newConnection);
-            
                 string json =  JsonSerializer.Serialize(config);
                 File.WriteAllText(configPath, json);
                 var box = MessageBoxManager.GetMessageBoxStandard("Connection added successfully",
                     "Connection added.", ButtonEnum.Ok);
                 AddConnection(newConnection, ParentPanel.Children.Count());
                 MainWindow.Instance.AddConnection(newConnection);
+                ResetInputFields();
                 BoxPanel.IsVisible = false;
                 await box.ShowAsync();
             } else
@@ -231,5 +232,14 @@ public partial class ManageHostsWindow : Window
             }
         }
         
+    }
+
+    private void ResetInputFields()
+    {
+        NameTextBox.Text = "";
+        HostTextBox.Text = "";
+        PortTextBox.Text = "";
+        UserTextBox.Text = "";
+        PasswordTextBox.Text = "";
     }
 }
