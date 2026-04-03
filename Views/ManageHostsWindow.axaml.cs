@@ -213,6 +213,8 @@ public partial class ManageHostsWindow : Window
                     .ElementAt(index).Tag = newConnection;
                 var grid = (Grid)ParentPanel.Children[index];
                 var textblock = (TextBlock)grid.Children[0];
+                var editButton =  (Button)grid.Children[1];
+                editButton.Tag = (newConnection, index);
                 textblock.Text = NameTextBox.Text;
                 ResetInputFields();
                 BoxPanel.IsVisible = false;
