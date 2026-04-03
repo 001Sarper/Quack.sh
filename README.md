@@ -8,6 +8,8 @@ A lightweight SSH client built with Avalonia UI and xterm.js — designed for Ho
 - 🖥️ **Multi-tab SSH sessions** — connect to multiple servers simultaneously
 - 🎨 **Light & Dark theme** — Catppuccin Latte / Mocha
 - 🔤 **Customizable font size**
+- 🔒 **Encrpyted SSH connection data**
+- 🔑 **Password & Private Key Authentication**
 - 📋 **Host management** — save, edit and delete connections
 - ⚡ **xterm.js terminal** — full terminal emulation with JetBrains Mono / Cascadia Code
 
@@ -35,10 +37,9 @@ dotnet run
 
 ## Roadmap
 
-- [ ] Encrpytion of Connection Data
-- [ ] SSH key authentication
 - [ ] Session logging
-
+- [ ] **Feature requests are welcome!**
+ 
 ## License
 
 MIT — see [LICENSE](LICENSE)
