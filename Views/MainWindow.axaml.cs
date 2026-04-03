@@ -13,6 +13,7 @@ using Avalonia.Threading;
 using Quack.sh.Views;
 using Quack.sh.Models;
 using Microsoft.AspNetCore.DataProtection;
+using MsBox.Avalonia;
 using WebViewControl;
 using Color = Avalonia.Media.Color;
 
@@ -171,7 +172,7 @@ public partial class MainWindow : Window
         tab.WebView.SizeChanged += WebViewOnSizeChanged;
         
         if (_currentConnection != null)
-            ConnectSSH(_currentConnection, tab);
+            ConnectSSH(_currentConnection, tab, tabItem);
     }
 
     private void WebViewOnSizeChanged(object? sender, SizeChangedEventArgs e)
@@ -198,28 +199,45 @@ public partial class MainWindow : Window
     private Connections? _currentConnection;
 
     
-    private void ConnectSSH(Connections connection, SshTab connectionTab)
+    private async void ConnectSSH(Connections connection, SshTab connectionTab, TabItem tabItem)
     {
         connectionTab.SshService.Disconnect();
         Console.WriteLine($"ConnectSSH called: {connection.Host}");
         bool privKeyUsed = connection.PrivateKeyUsed;
-    
-        connectionTab.SshService.Connect(
-            connection.Host,
-            connection.Port,
-            connection.Username,
-            !privKeyUsed ? App.Instance.Protector.Unprotect(connection.Password) : "",
-            privKeyUsed,
-            privKeyUsed && !string.IsNullOrEmpty(connection.PrivateKey) ? App.Instance.Protector.Unprotect(connection.PrivateKey) : "",
-            privKeyUsed && !string.IsNullOrEmpty(connection.Passphrase) ? App.Instance.Protector.Unprotect(connection.Passphrase) : "",
-            (output) =>
+
+        try
         {
-            Dispatcher.UIThread.Post(() =>
-            {
-                var safe = output.Replace("`", "\\`").Replace("\\", "\\\\");
-                connectionTab.WebView.ExecuteScript($"term.write(`{safe}`)");
-            });
-        }, connectionTab.Bridge.Cols, connectionTab.Bridge.Rows);
+            connectionTab.SshService.Connect(
+                connection.Host,
+                connection.Port,
+                connection.Username,
+                !privKeyUsed ? App.Instance.Protector.Unprotect(connection.Password) : "",
+                privKeyUsed,
+                privKeyUsed && !string.IsNullOrEmpty(connection.PrivateKey)
+                    ? App.Instance.Protector.Unprotect(connection.PrivateKey)
+                    : "",
+                privKeyUsed && !string.IsNullOrEmpty(connection.Passphrase)
+                    ? App.Instance.Protector.Unprotect(connection.Passphrase)
+                    : "",
+                (output) =>
+                {
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        var safe = output.Replace("`", "\\`").Replace("\\", "\\\\");
+                        connectionTab.WebView.ExecuteScript($"term.write(`{safe}`)");
+                    });
+                }, connectionTab.Bridge.Cols, connectionTab.Bridge.Rows);
+        }
+        catch (Exception e)
+        {
+            TabController.Items.Remove(tabItem);
+            // Cleanup
+            connectionTab.SshService?.Disconnect();
+            connectionTab.WebView?.Dispose();
+            
+            var box = MessageBoxManager.GetMessageBoxStandard("Couldn't connect to SSH", "Connection to the SSH Server could not be estabilished. Error: \n" + e);
+            await box.ShowAsync();
+        }
     }
     
 

@@ -152,7 +152,6 @@ public partial class ManageHostsWindow : Window
 
     private void AddConnection_OnClick(object? sender, RoutedEventArgs e)
     {
-        
         ResetInputFields();
         AuthSelection.SelectedIndex = 0;
         BoxPanelButton.Content = "Add connection";
@@ -166,6 +165,9 @@ public partial class ManageHostsWindow : Window
     {
         var button =  sender as Button;
         var (index, manageMode) = ((int, int))button.Tag;
+        bool privKeyUsed = (AuthSelection.SelectedIndex == 1) ? true : false;
+        
+        string passphrase = (string.IsNullOrEmpty(PassphraseTextBox.Text)) ? "" : PassphraseTextBox.Text;
         
         Config config;
         
@@ -179,28 +181,24 @@ public partial class ManageHostsWindow : Window
             config = new Config();
         }
 
-        if (manageMode == 0) //manageMode 0 is editing a connection
+
+        if (NameTextBox.Text != "" && HostTextBox.Text.Contains(".") && int.TryParse(PortTextBox.Text, out int port) &&
+            UserTextBox.Text != "" && (privKeyUsed ? !string.IsNullOrEmpty(_privateKey) : PasswordTextBox.Text != ""))
         {
-            
-            if (NameTextBox.Text != "" && HostTextBox.Text.Contains(".") && int.TryParse(PortTextBox.Text, out int port) &&
-                UserTextBox.Text != "" && PasswordTextBox.Text != "")
+            Connections newConnection = new Connections
             {
-
-                bool privKeyUsed = (AuthSelection.SelectedIndex == 1) ? true : false;
-
-                string passphrase = (string.IsNullOrEmpty(PassphraseTextBox.Text)) ? "" : PassphraseTextBox.Text;
-                
-                Connections newConnection = new Connections
-                {
-                    Name = NameTextBox.Text,
-                    Host = HostTextBox.Text,
-                    Port = port,
-                    Username = UserTextBox.Text,
-                    Password = (!privKeyUsed) ? App.Instance.Protector.Protect(PasswordTextBox.Text) : "",
-                    PrivateKeyUsed = privKeyUsed,
-                    PrivateKey = (privKeyUsed) ? App.Instance.Protector.Protect(_privateKey) : "",
-                    Passphrase = (privKeyUsed && !string.IsNullOrEmpty(passphrase)) ? App.Instance.Protector.Protect(passphrase) : ""
-                };
+                Name = NameTextBox.Text,
+                Host = HostTextBox.Text,
+                Port = port,
+                Username = UserTextBox.Text,
+                Password = (!privKeyUsed) ? App.Instance.Protector.Protect(PasswordTextBox.Text) : "",
+                PrivateKeyUsed = privKeyUsed,
+                PrivateKey = (privKeyUsed) ? App.Instance.Protector.Protect(_privateKey) : "",
+                Passphrase = (privKeyUsed && !string.IsNullOrEmpty(passphrase)) ? App.Instance.Protector.Protect(passphrase) : ""
+            };
+            
+            if (manageMode == 0)
+            {
                 Console.WriteLine(NameTextBox.Text);
                 config.Connections[index] = newConnection;
                 string json =  JsonSerializer.Serialize(config);
@@ -210,43 +208,17 @@ public partial class ManageHostsWindow : Window
                 MainWindow.Instance.ConnectionsList.Children
                     .OfType<Button>()
                     .ElementAt(index).Content = NameTextBox.Text;
+                MainWindow.Instance.ConnectionsList.Children
+                    .OfType<Button>()
+                    .ElementAt(index).Tag = newConnection;
                 var grid = (Grid)ParentPanel.Children[index];
                 var textblock = (TextBlock)grid.Children[0];
                 textblock.Text = NameTextBox.Text;
                 ResetInputFields();
                 BoxPanel.IsVisible = false;
                 await box.ShowAsync();
-            } else
+            }else if (manageMode == 1)
             {
-                var box = MessageBoxManager.GetMessageBoxStandard("Invalid parameters",
-                    "Please enter valid connection parameters", ButtonEnum.Ok);
-                await box.ShowAsync();
-            }
-            
-            
-            
-            
-        }else if (manageMode == 1) //manageMode 1 is adding a new connection
-        {
-            if (NameTextBox.Text != "" && HostTextBox.Text.Contains(".") && int.TryParse(PortTextBox.Text, out int port) &&
-                UserTextBox.Text != "" && PasswordTextBox.Text != "")
-            {
-
-                bool privKeyUsed = (AuthSelection.SelectedIndex == 1) ? true : false;
-
-                string passphrase = (string.IsNullOrEmpty(PassphraseTextBox.Text)) ? "" : PassphraseTextBox.Text;
-                
-                Connections newConnection = new Connections
-                {
-                    Name = NameTextBox.Text,
-                    Host = HostTextBox.Text,
-                    Port = port,
-                    Username = UserTextBox.Text,
-                    Password = (!privKeyUsed) ? App.Instance.Protector.Protect(PasswordTextBox.Text) : "",
-                    PrivateKeyUsed = privKeyUsed,
-                    PrivateKey = (privKeyUsed) ? App.Instance.Protector.Protect(_privateKey) : "",
-                    Passphrase = (privKeyUsed && !string.IsNullOrEmpty(passphrase)) ? App.Instance.Protector.Protect(passphrase) : ""
-                };
                 config.Connections.Add(newConnection);
                 string json =  JsonSerializer.Serialize(config);
                 File.WriteAllText(configPath, json);
@@ -257,12 +229,13 @@ public partial class ManageHostsWindow : Window
                 ResetInputFields();
                 BoxPanel.IsVisible = false;
                 await box.ShowAsync();
-            } else
-            {
-                var box = MessageBoxManager.GetMessageBoxStandard("Invalid parameters",
-                    "Please enter valid connection parameters", ButtonEnum.Ok);
-                await box.ShowAsync();
             }
+        }
+        else
+        {
+            var box = MessageBoxManager.GetMessageBoxStandard("Invalid parameters",
+                "Please enter valid connection parameters", ButtonEnum.Ok);
+            await box.ShowAsync();
         }
         
     }
