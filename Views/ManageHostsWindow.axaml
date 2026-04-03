@@ -11,7 +11,7 @@
                                 <ColumnDefinition Width="300"/>
                                 <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Grid Grid.Column="0" x:Name="Sidebar" Background="{DynamicResource SurfaceColor}">
+                        <Grid Grid.Column="0" x:Name="Sidebar" Background="{DynamicResource ConnectionBarColor}">
                                 <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
                                         <RowDefinition Height="50"/>
@@ -24,7 +24,7 @@
                                                 
                                 </Grid>
                         </Grid>
-                        <Grid Grid.Column="1">
+                        <Grid Grid.Column="1" Background="{DynamicResource BackgroundColor}">
                                 <StackPanel Spacing="10" Margin="16" x:Name="BoxPanel" IsVisible="False">
                                         <TextBlock Text="Host Name"/>
                                         <TextBox Watermark="Debian Server" x:Name="NameTextBox"/>
@@ -35,7 +35,15 @@
                                         <TextBlock Text="Username"/>
                                         <TextBox Watermark="root" x:Name="UserTextBox"/>
                                         <TextBlock Text="Password"/>
-                                        <TextBox Watermark="iLoveAdmins" PasswordChar="•" x:Name="PasswordTextBox"/>
+                                        <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                
+                                                <TextBox Grid.Column="0" Watermark="iLoveAdmins" PasswordChar="•" x:Name="PasswordTextBox"/>
+                                                <Button Grid.Column="1" Content="Show Password" Margin="3" Click="ShowPasswordButton_OnClick"/>
+                                        </Grid>
                 
                                         <Button x:Name="BoxPanelButton" Content="" Background="MediumTurquoise"/>
                                 </StackPanel>

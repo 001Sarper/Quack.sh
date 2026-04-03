@@ -2,18 +2,15 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
-using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Microsoft.AspNetCore.DataProtection;
 using MsBox.Avalonia;
 using MsBox.Avalonia.Enums;
 using Quack.sh.Models;
-using Renci.SshNet.Common;
 
 namespace Quack.sh.Views;
 
@@ -243,5 +240,21 @@ public partial class ManageHostsWindow : Window
         PortTextBox.Text = "";
         UserTextBox.Text = "";
         PasswordTextBox.Text = "";
+    }
+
+    private void ShowPasswordButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        var button = sender as Button;
+        
+        if (PasswordTextBox.RevealPassword == false)
+        {
+            PasswordTextBox.RevealPassword = true;
+            button.Content = "Hide Password";
+        }
+        else
+        {
+            PasswordTextBox.RevealPassword = false;
+            button.Content = "Show Password";
+        }
     }
 }
