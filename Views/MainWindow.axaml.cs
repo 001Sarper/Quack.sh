@@ -87,8 +87,11 @@ public partial class MainWindow : Window
         var button = new Button
         {
             Content = connection.Name,
+            FontSize = 12,
+            HorizontalContentAlignment = HorizontalAlignment.Center,
             Width = 200,
-            Background = new SolidColorBrush(isDark ? Color.FromArgb(255, 22, 27, 34) : Color.FromArgb(255, 246, 248, 250), 1.0),
+            Background = new SolidColorBrush(isDark ? Color.FromArgb(255, 22, 27, 34) : Color.FromArgb(255, 203, 211, 219),
+                1.0),
             Tag = connection
         };
         
