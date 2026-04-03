@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using Microsoft.AspNetCore.DataProtection;
 using System.IO;
 using System.Text.Json;
 using Avalonia;
@@ -12,11 +12,17 @@ namespace Quack.sh;
 
 public partial class App : Application
 {
+    public IDataProtector Protector { get; private set; }
+    
     public static App Instance { get; private set; }
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
         Instance = this;
+        
+        var provider = DataProtectionProvider.Create("Quack.sh");
+        Protector = provider.CreateProtector("Connections");
+        
 
     }
 

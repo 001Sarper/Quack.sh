@@ -9,6 +9,7 @@ using Avalonia.Layout;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using Microsoft.AspNetCore.DataProtection;
 using MsBox.Avalonia;
 using MsBox.Avalonia.Enums;
 using Quack.sh.Models;
@@ -127,9 +128,10 @@ public partial class ManageHostsWindow : Window
         HostTextBox.Text = connection.Host;
         PortTextBox.Text = connection.Port.ToString();
         UserTextBox.Text = connection.Username;
-        PasswordTextBox.Text = connection.Password;
+        PasswordTextBox.Text = App.Instance.Protector.Unprotect(connection.Password);
         
         BoxPanel.IsVisible = true;
+        
         
         
     }
@@ -173,7 +175,7 @@ public partial class ManageHostsWindow : Window
                     Host = HostTextBox.Text,
                     Port = port,
                     Username = UserTextBox.Text,
-                    Password = PasswordTextBox.Text
+                    Password = App.Instance.Protector.Protect(PasswordTextBox.Text)
                 };
                 Console.WriteLine(NameTextBox.Text);
                 config.Connections[index] = newConnection;
@@ -212,7 +214,7 @@ public partial class ManageHostsWindow : Window
                     Host = HostTextBox.Text,
                     Port = port,
                     Username = UserTextBox.Text,
-                    Password = PasswordTextBox.Text
+                    Password = App.Instance.Protector.Protect(PasswordTextBox.Text)
                 };
                 config.Connections.Add(newConnection);
                 string json =  JsonSerializer.Serialize(config);

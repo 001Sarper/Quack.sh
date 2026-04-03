@@ -1,3 +1,5 @@
+using System;
+
 namespace Quack.sh.Models;
 
 public class Connections

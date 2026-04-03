@@ -12,6 +12,7 @@ using Avalonia.Media;
 using Avalonia.Threading;
 using Quack.sh.Views;
 using Quack.sh.Models;
+using Microsoft.AspNetCore.DataProtection;
 using WebViewControl;
 using Color = Avalonia.Media.Color;
 
@@ -203,7 +204,7 @@ public partial class MainWindow : Window
         Console.WriteLine($"ConnectSSH called: {connection.Host}");
         
     
-        connectionTab.SshService.Connect(connection.Host, connection.Port, connection.Username, connection.Password, (output) =>
+        connectionTab.SshService.Connect(connection.Host, connection.Port, connection.Username, App.Instance.Protector.Unprotect(connection.Password), (output) =>
         {
             Dispatcher.UIThread.Post(() =>
             {
