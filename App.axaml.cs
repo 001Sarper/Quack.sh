@@ -20,7 +20,15 @@ public partial class App : Application
         AvaloniaXamlLoader.Load(this);
         Instance = this;
         
-        var provider = DataProtectionProvider.Create("Quack.sh");
+        var keysDirectory = new DirectoryInfo(
+            Path.Combine(AppContext.BaseDirectory, "dataprotection-keys")
+        );
+
+        var provider = DataProtectionProvider.Create(
+            keysDirectory,
+            options => options.SetApplicationName("Quack.sh")
+        );
+
         Protector = provider.CreateProtector("Connections");
         
 

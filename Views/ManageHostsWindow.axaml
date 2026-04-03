@@ -34,18 +34,36 @@
                                         <TextBox Watermark="22" x:Name="PortTextBox"/>
                                         <TextBlock Text="Username"/>
                                         <TextBox Watermark="root" x:Name="UserTextBox"/>
-                                        <TextBlock Text="Password"/>
-                                        <Grid>
+                                        <TextBlock Text="Authentication Method"/>
+                                        <ComboBox SelectedIndex="0" Name="AuthSelection" SelectionChanged="AuthSelection_OnSelectionChanged">
+                                                <ComboBoxItem Content="Password Authentication"/>
+                                                <ComboBoxItem Content="Private Key Authentication"/>
+                                        </ComboBox>
+                                        <Grid IsVisible="True" x:Name="PasswordAuth">
                                                 <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="*"/>
                                                         <ColumnDefinition Width="Auto"/>
                                                 </Grid.ColumnDefinitions>
-                                                
                                                 <TextBox Grid.Column="0" Watermark="iLoveAdmins" PasswordChar="•" x:Name="PasswordTextBox"/>
-                                                <Button Grid.Column="1" Content="Show Password" Margin="3" Click="ShowPasswordButton_OnClick"/>
+                                                <Button Grid.Column="1" Content="Show Password" Margin="10, 0,0,0" Click="ShowPasswordButton_OnClick" Tag="PasswordAuth"/>
                                         </Grid>
+                                        <StackPanel Orientation="Vertical" x:Name="PrivateKeyAuth" IsVisible="False" Spacing="10">
+                                                <StackPanel Orientation="Horizontal" Spacing="10">
+                                                        <Button Content="Select Private Key" Height="30" Click="PickPrivateKey_OnClick"/>
+                                                        <TextBox x:Name="PrivateKeyPathBox" IsReadOnly="True" Watermark="No file selected" Height="30"/>
+                                                </StackPanel>
+                                                <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*"/>
+                                                                <ColumnDefinition Width="Auto"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBox Grid.Column="0" Watermark="Passphrase (optional)" PasswordChar="•" x:Name="PassphraseTextBox"/>
+                                                        <Button Grid.Column="1" Content="Show Password" Margin="10, 0,0,0" Click="ShowPasswordButton_OnClick" Tag="PrivAuth"/>
+                                                </Grid>
+                                        </StackPanel>
+                                        
                 
-                                        <Button x:Name="BoxPanelButton" Content="" Background="MediumTurquoise"/>
+                                        <Button x:Name="BoxPanelButton" Content="" Background="MediumTurquoise" Margin="0, 20, 0,0"/>
                                 </StackPanel>
                         </Grid>
                 </Grid>

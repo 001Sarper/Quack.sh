@@ -7,6 +7,7 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using Avalonia.Platform.Storage;
 using Microsoft.AspNetCore.DataProtection;
 using MsBox.Avalonia;
 using MsBox.Avalonia.Enums;
@@ -115,8 +116,11 @@ public partial class ManageHostsWindow : Window
 
     private void EditConnection(object? sender, RoutedEventArgs e)
     {
+        
         var button = sender as Button;
         var (connection, index) = ((Connections, int))button.Tag;
+        
+        ResetInputFields();
         
         BoxPanelButton.Content = "Save changes";
         BoxPanelButton.Tag = (index, 0);
@@ -125,7 +129,20 @@ public partial class ManageHostsWindow : Window
         HostTextBox.Text = connection.Host;
         PortTextBox.Text = connection.Port.ToString();
         UserTextBox.Text = connection.Username;
-        PasswordTextBox.Text = App.Instance.Protector.Unprotect(connection.Password);
+        if (connection.PrivateKeyUsed)
+        {
+            AuthSelection.SelectedIndex = 1;
+            PasswordAuth.IsVisible = false;
+            PrivateKeyAuth.IsVisible = true;
+            PassphraseTextBox.Text = App.Instance.Protector.Unprotect(connection.Passphrase);
+        }
+        else
+        {
+            AuthSelection.SelectedIndex = 0;
+            PrivateKeyAuth.IsVisible = false;
+            PasswordAuth.IsVisible = true;
+            PasswordTextBox.Text = App.Instance.Protector.Unprotect(connection.Password);
+        }
         
         BoxPanel.IsVisible = true;
         
@@ -135,6 +152,9 @@ public partial class ManageHostsWindow : Window
 
     private void AddConnection_OnClick(object? sender, RoutedEventArgs e)
     {
+        
+        ResetInputFields();
+        AuthSelection.SelectedIndex = 0;
         BoxPanelButton.Content = "Add connection";
         BoxPanelButton.Tag = (-1, 1);
         BoxPanelButton.Click += ManageConnection_OnClick;
@@ -159,20 +179,27 @@ public partial class ManageHostsWindow : Window
             config = new Config();
         }
 
-        if (manageMode == 0)
+        if (manageMode == 0) //manageMode 0 is editing a connection
         {
             
             if (NameTextBox.Text != "" && HostTextBox.Text.Contains(".") && int.TryParse(PortTextBox.Text, out int port) &&
                 UserTextBox.Text != "" && PasswordTextBox.Text != "")
             {
 
+                bool privKeyUsed = (AuthSelection.SelectedIndex == 1) ? true : false;
+
+                string passphrase = (string.IsNullOrEmpty(PassphraseTextBox.Text)) ? "" : PassphraseTextBox.Text;
+                
                 Connections newConnection = new Connections
                 {
                     Name = NameTextBox.Text,
                     Host = HostTextBox.Text,
                     Port = port,
                     Username = UserTextBox.Text,
-                    Password = App.Instance.Protector.Protect(PasswordTextBox.Text)
+                    Password = (!privKeyUsed) ? App.Instance.Protector.Protect(PasswordTextBox.Text) : "",
+                    PrivateKeyUsed = privKeyUsed,
+                    PrivateKey = (privKeyUsed) ? App.Instance.Protector.Protect(_privateKey) : "",
+                    Passphrase = (privKeyUsed && !string.IsNullOrEmpty(passphrase)) ? App.Instance.Protector.Protect(passphrase) : ""
                 };
                 Console.WriteLine(NameTextBox.Text);
                 config.Connections[index] = newConnection;
@@ -199,19 +226,26 @@ public partial class ManageHostsWindow : Window
             
             
             
-        }else if (manageMode == 1)
+        }else if (manageMode == 1) //manageMode 1 is adding a new connection
         {
             if (NameTextBox.Text != "" && HostTextBox.Text.Contains(".") && int.TryParse(PortTextBox.Text, out int port) &&
                 UserTextBox.Text != "" && PasswordTextBox.Text != "")
             {
 
+                bool privKeyUsed = (AuthSelection.SelectedIndex == 1) ? true : false;
+
+                string passphrase = (string.IsNullOrEmpty(PassphraseTextBox.Text)) ? "" : PassphraseTextBox.Text;
+                
                 Connections newConnection = new Connections
                 {
                     Name = NameTextBox.Text,
                     Host = HostTextBox.Text,
                     Port = port,
                     Username = UserTextBox.Text,
-                    Password = App.Instance.Protector.Protect(PasswordTextBox.Text)
+                    Password = (!privKeyUsed) ? App.Instance.Protector.Protect(PasswordTextBox.Text) : "",
+                    PrivateKeyUsed = privKeyUsed,
+                    PrivateKey = (privKeyUsed) ? App.Instance.Protector.Protect(_privateKey) : "",
+                    Passphrase = (privKeyUsed && !string.IsNullOrEmpty(passphrase)) ? App.Instance.Protector.Protect(passphrase) : ""
                 };
                 config.Connections.Add(newConnection);
                 string json =  JsonSerializer.Serialize(config);
@@ -240,21 +274,77 @@ public partial class ManageHostsWindow : Window
         PortTextBox.Text = "";
         UserTextBox.Text = "";
         PasswordTextBox.Text = "";
+        PassphraseTextBox.Text = "";
     }
 
     private void ShowPasswordButton_OnClick(object? sender, RoutedEventArgs e)
     {
         var button = sender as Button;
-        
-        if (PasswordTextBox.RevealPassword == false)
+
+        if (button.Tag == "PasswordAuth")
         {
-            PasswordTextBox.RevealPassword = true;
-            button.Content = "Hide Password";
+            if (PasswordTextBox.RevealPassword == false)
+            {
+                PasswordTextBox.RevealPassword = true;
+                button.Content = "Hide Password";
+            }
+            else
+            {
+                PasswordTextBox.RevealPassword = false;
+                button.Content = "Show Password";
+            }
         }
-        else
+        else if (button.Tag == "PrivAuth")
         {
-            PasswordTextBox.RevealPassword = false;
-            button.Content = "Show Password";
+            if (PassphraseTextBox.RevealPassword == false)
+            {
+                PassphraseTextBox.RevealPassword = true;
+                button.Content = "Hide Password";
+            }
+            else
+            {
+                PassphraseTextBox.RevealPassword = false;
+                button.Content = "Show Password";
+            }
+        }
+        
+    }
+
+    private void AuthSelection_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (BoxPanel is null) return;
+        
+        if (BoxPanel.IsVisible)
+        {
+            if (AuthSelection.SelectedIndex == 0)
+            {
+                PrivateKeyAuth.IsVisible = false;
+                PasswordAuth.IsVisible = true;
+            } else if (AuthSelection.SelectedIndex == 1)
+            {
+                PasswordAuth.IsVisible = false;
+                PrivateKeyAuth.IsVisible = true;
+            }
+        }
+    }
+    
+    private string _privateKey = string.Empty;
+
+    private async void PickPrivateKey_OnClick(object? sender, RoutedEventArgs e)
+    {
+        var files = await TopLevel.GetTopLevel(this)!
+            .StorageProvider
+            .OpenFilePickerAsync(new FilePickerOpenOptions
+            {
+                Title = "Select private key file",
+                AllowMultiple = false
+            });
+
+        if (files.Count > 0)
+        {
+            PrivateKeyPathBox.Text = files[0].Path.LocalPath;
+            // Key einlesen:
+            _privateKey = await File.ReadAllTextAsync(files[0].Path.LocalPath);
         }
     }
 }

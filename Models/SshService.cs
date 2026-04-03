@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Text;
 using Renci.SshNet;
 using Renci.SshNet.Common;
@@ -9,10 +10,21 @@ public class SshService
     private SshClient _client;
     private ShellStream _shell;
 
-    public void Connect(string host, int port, string user, string password, Action<string> onOutput, int cols = 80, int rows = 24)
+    public void Connect(string host, int port, string user, string password, bool isPrivateKeyUsed, string privateKey, string passphrase, Action<string> onOutput, int cols = 80, int rows = 24)
     {
         Console.WriteLine($"SSH Connect with size: {cols}x{rows}");
-        _client = new SshClient(host, port, user, password);
+        if (isPrivateKeyUsed)
+        {
+            var keyStream = new MemoryStream(Encoding.UTF8.GetBytes(privateKey));
+            var keyFile = (string.IsNullOrEmpty(passphrase)) ? new PrivateKeyFile(keyStream) : new PrivateKeyFile(keyStream, passphrase);
+            
+            _client = new SshClient(host, port, user, keyFile);
+        }
+        else
+        {
+            _client = new SshClient(host, port, user, password);
+        }
+        
         _client.Connect();
 
         _shell = _client.CreateShellStream("xterm-256color", (uint)cols, (uint)rows, 0, 0, 1024);

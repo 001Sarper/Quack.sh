@@ -9,4 +9,7 @@ public class Connections
     public int Port { get; set; }
     public string Username { get; set; }
     public string Password { get; set; }
+    public bool PrivateKeyUsed { get; set; }
+    public string PrivateKey { get; set; }
+    public string Passphrase { get; set; }
 }

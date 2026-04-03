@@ -202,9 +202,17 @@ public partial class MainWindow : Window
     {
         connectionTab.SshService.Disconnect();
         Console.WriteLine($"ConnectSSH called: {connection.Host}");
-        
+        bool privKeyUsed = connection.PrivateKeyUsed;
     
-        connectionTab.SshService.Connect(connection.Host, connection.Port, connection.Username, App.Instance.Protector.Unprotect(connection.Password), (output) =>
+        connectionTab.SshService.Connect(
+            connection.Host,
+            connection.Port,
+            connection.Username,
+            !privKeyUsed ? App.Instance.Protector.Unprotect(connection.Password) : "",
+            privKeyUsed,
+            privKeyUsed && !string.IsNullOrEmpty(connection.PrivateKey) ? App.Instance.Protector.Unprotect(connection.PrivateKey) : "",
+            privKeyUsed && !string.IsNullOrEmpty(connection.Passphrase) ? App.Instance.Protector.Unprotect(connection.Passphrase) : "",
+            (output) =>
         {
             Dispatcher.UIThread.Post(() =>
             {
