@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <CefGlueVersion>120.6099.211</CefGlueVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -66,4 +67,13 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </AvaloniaResource>
   </ItemGroup>
+
+  <Target Name="CopyCefGlueBrowserProcess" AfterTargets="Publish">
+    <ItemGroup>
+      <CefGlueFiles Include="$(NuGetPackageRoot)cefglue.common/$(CefGlueVersion)/bin/linux-x64/*" />
+    </ItemGroup>
+    <Copy
+            SourceFiles="@(CefGlueFiles)"
+            DestinationFolder="$(PublishDir)CefGlueBrowserProcess" />
+  </Target>
 </Project>
